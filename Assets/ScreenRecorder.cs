@@ -144,6 +144,10 @@ public class ScreenRecorder : MonoBehaviour
 
 	private bool saving = false;
 
+	/*
+	 * Simple screennshot example in the main thread
+	 * Could be called as StartCoroutine(TakeScreenShotSimple())
+	 */
 	public IEnumerator TakeScreenShotSimple()
 	{
 		WaitForEndOfFrame waitForFrame = new WaitForEndOfFrame();
@@ -214,7 +218,7 @@ public class ScreenRecorder : MonoBehaviour
 				{
 					frameQueue.Enqueue(tempTexture2D.GetRawTextureData());
 
-					frameNumber ++;
+					frameNumber++;
 
 					if(frameNumber % frameRate == 0)
 					{
@@ -236,8 +240,9 @@ public class ScreenRecorder : MonoBehaviour
 		}
     }
 
-
-	// example while running normally, but this method isn't called while in headless mode (batch mode)
+	// Example while running the game normally, but this method isn't called while in headless mode (batch mode)
+	// The actual overload method is OnRenderImage,
+	// but we don't need it since we are running this through a coroutine instead.
 	void OnRenderImageTest(RenderTexture source, RenderTexture destination)
 	{
 		return;
@@ -272,7 +277,7 @@ public class ScreenRecorder : MonoBehaviour
 			{
 				frameQueue.Enqueue(tempTexture2D.GetRawTextureData());
 
-				frameNumber ++;
+				frameNumber++;
 
 				if(frameNumber % frameRate == 0)
 				{
@@ -317,7 +322,7 @@ public class ScreenRecorder : MonoBehaviour
 				}
 
 				// Done
-				savingFrameNumber ++;
+				savingFrameNumber++;
 				Debug.Log ("Saved " + savingFrameNumber + " frames. " + frameQueue.Count + " frames remaining.");
 			}
 			else

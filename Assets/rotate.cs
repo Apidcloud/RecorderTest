@@ -5,15 +5,13 @@ using UnityEngine;
 
 public class rotate : MonoBehaviour
 {
-    // Start is called before the first frame update
     void Start()
     { /*
+        // Unity Recorder example through code:
         var settings = ScriptableObject.CreateInstance<RecorderControllerSettings>();
         var imageRecorder = ScriptableObject.CreateInstance<MovieRecorderSettings>();
 
         imageRecorder.OutputFormat = MovieRecorderSettings.VideoRecorderOutputFormat.MP4;
-
-        
 
         settings.AddRecorderSettings(imageRecorder);
         var recorderController = new RecorderController(settings);
@@ -24,7 +22,6 @@ public class rotate : MonoBehaviour
         Debug.Assert(recorderController.IsRecording()); */
     }
 
-    // Update is called once per frame
     void Update()
     {
         this.transform.Rotate(10, 0, 10, Space.Self);
