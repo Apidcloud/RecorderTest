@@ -5,6 +5,8 @@
 [Bb]uilds/
 Assets/AssetStoreTools*
 
+node_modules
+
 buildLog.txt
 batchLog.txt
 

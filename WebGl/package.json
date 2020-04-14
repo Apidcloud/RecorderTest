@@ -1,0 +1,22 @@
+{
+  "name": "webgl",
+  "version": "1.0.0",
+  "description": "WebGl Unity Recording example",
+  "main": "main.js",
+  "scripts": {
+    "start": "python -m SimpleHTTPServer 8080"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Apidcloud/RecorderTest.git"
+  },
+  "author": "Apidcloud <luisapidcloud@hotmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Apidcloud/RecorderTest/issues"
+  },
+  "homepage": "https://github.com/Apidcloud/RecorderTest#readme",
+  "dependencies": {
+    "puppeteer": "2.1.1"
+  }
+}
