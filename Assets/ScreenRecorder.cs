@@ -89,16 +89,14 @@ public class ScreenRecorder : MonoBehaviour
 
 	void Start () 
 	{
-		Debug.Log ("Start called");
-		
-		// Set target frame rate (optional)
-		
-		Application.targetFrameRate = frameRate;
+		Debug.Log ("ScreenRecorder.Start called");
 		
 		#if UNITY_WEBGL
 			persistentDataPath = Application.persistentDataPath;
 		#else
-			persistentDataPath =  "./ScreenRecorder";
+			// Set target frame rate (optional)
+			Application.targetFrameRate = frameRate;
+			persistentDataPath = "./ScreenRecorder";
 		#endif
 		
 		Debug.Log ("Capturing to: " + persistentDataPath + "/");
