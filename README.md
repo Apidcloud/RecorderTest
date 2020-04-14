@@ -12,9 +12,6 @@ To make it easier to access, in **standalone** scenarios, in case you opt for th
 
 In the **WebGl** build, however, the textures are saved into the persistent path, which is an **IndexedDB**.
 
-#### WebGL
-`<unity-executable-or-app-path> -quit -batchmode -projectPath ./ -executeMethod BuildHelper.BuildWeb -logFile buildLog.txt`
-
 #### Windows x64
 `"C:\Program Files\Unity\Editor\Unity.exe” -quit -batchmode -projectPath ./ -executeMethod BuildHelper.BuildWin64 -logFile buildLog.txt`
 
@@ -26,6 +23,9 @@ In the **WebGl** build, however, the textures are saved into the persistent path
 
 #### Linux
 Run the build resulting file as above, while setting `-executeMethod` to `BuildHelper.BuildLinux` or `BuildHelper.BuildLinux64` or `BuildHelper.BuildLinuxUniversal`
+
+#### WebGL
+`<unity-executable-or-app-path> -quit -batchmode -projectPath ./ -executeMethod BuildHelper.BuildWeb -logFile buildLog.txt`
 
 ### Run Build in Batch Mode (Standalone)
 
