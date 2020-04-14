@@ -4,7 +4,8 @@
   "description": "WebGl Unity Recording example",
   "main": "main.js",
   "scripts": {
-    "start": "python -m SimpleHTTPServer 8080"
+    "dev": "python -m SimpleHTTPServer 8080",
+    "start": "node main.js"
   },
   "repository": {
     "type": "git",
