@@ -4,6 +4,10 @@ using UnityEditor.Build.Reporting;
 
 public class BuildHelper
 {
+    public static void BuildWeb(){
+        BuildHelper.Build(BuildTarget.WebGL);
+    }
+
     public static void BuildWin()
     {
         BuildHelper.Build(BuildTarget.StandaloneWindows);
@@ -38,7 +42,8 @@ public class BuildHelper
     {
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
         buildPlayerOptions.scenes = new[] { "Assets/Scenes/SampleScene.unity" };
-        buildPlayerOptions.locationPathName = "Build/AutomaticRecording";
+
+        buildPlayerOptions.locationPathName = target != BuildTarget.WebGL ? "Build/AutomaticRecording" : "WebGlBuild";
         buildPlayerOptions.target = target;
         buildPlayerOptions.options = BuildOptions.None;
 

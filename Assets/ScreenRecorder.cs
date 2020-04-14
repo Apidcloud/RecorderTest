@@ -4,6 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+#if UNITY_WEBGL
+using System.Runtime.InteropServices;
+#endif
 
 class BitmapEncoder
 {
@@ -92,16 +95,21 @@ public class ScreenRecorder : MonoBehaviour
 		
 		Application.targetFrameRate = frameRate;
 		
-		// Prepare the data directory
-		persistentDataPath = "./ScreenRecorder";
-
+		#if UNITY_WEBGL
+			persistentDataPath = Application.persistentDataPath;
+		#else
+			persistentDataPath =  "./ScreenRecorder";
+		#endif
+		
 		Debug.Log ("Capturing to: " + persistentDataPath + "/");
 
+		#if !UNITY_WEBGL
 		if (!System.IO.Directory.Exists(persistentDataPath))
 		{
 			System.IO.Directory.CreateDirectory(persistentDataPath);
 		}
-		
+		#endif
+
 		// Prepare textures and initial values
 		screenWidth = 1920;
 		screenHeight = 1080;
@@ -111,26 +119,29 @@ public class ScreenRecorder : MonoBehaviour
 		RenderTexture.active = tempRenderTexture;
 		GetComponent<Camera>().targetTexture = tempRenderTexture;
 
-		frameQueue = new Queue<byte[]> ();
-		
 		frameNumber = 0;
 		savingFrameNumber = 0;
 
-		captureFrameTime = 1.0f / (float)frameRate;
-		lastFrameTime = Time.time;
-
-		// Kill the encoder thread if running from a previous execution
-		if (encoderThread != null && (threadIsProcessing || encoderThread.IsAlive)) {
-			threadIsProcessing = false;
-			encoderThread.Join();
-		}
-
-		// Start a new encoder thread
-		threadIsProcessing = true;
-		encoderThread = new Thread (EncodeAndSave);
-		encoderThread.Start ();
+		#if !UNITY_WEBGL
+			frameQueue = new Queue<byte[]> ();
 		
-		StartCoroutine(TakeScreenShot(GetComponent<Camera>()));
+			captureFrameTime = 1.0f / (float)frameRate;
+			lastFrameTime = Time.time;
+
+			// Kill the encoder thread if running from a previous execution
+			if (encoderThread != null && (threadIsProcessing || encoderThread.IsAlive)) {
+				threadIsProcessing = false;
+				encoderThread.Join();
+			}
+
+			// Start a new encoder thread
+			threadIsProcessing = true;
+			encoderThread = new Thread (EncodeAndSave);
+			encoderThread.Start ();
+			StartCoroutine(TakeScreenShot(GetComponent<Camera>()));
+		#else
+			StartCoroutine(TakeScreenShotSimple(GetComponent<Camera>()));
+		#endif
 	}
 	
 	void OnDisable() 
@@ -148,8 +159,10 @@ public class ScreenRecorder : MonoBehaviour
 	 * Simple screennshot example in the main thread
 	 * Could be called as StartCoroutine(TakeScreenShotSimple())
 	 */
-	public IEnumerator TakeScreenShotSimple()
+	public IEnumerator TakeScreenShotSimple(Camera camera)
 	{
+		Debug.Log ("Screenshot Recording Single Thread -- STARTED");
+
 		WaitForEndOfFrame waitForFrame = new WaitForEndOfFrame();
 
 		while (true)
@@ -162,30 +175,47 @@ public class ScreenRecorder : MonoBehaviour
 				saving = true;
 				frameNumber++;
 
-				tempTexture2D = new Texture2D(Screen.width, Screen.height);
-				//Get Image from screen
-				tempTexture2D.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
+				RenderTexture.active = camera.targetTexture;
+				camera.Render();
+					
+				tempTexture2D = new Texture2D(camera.targetTexture.width, camera.targetTexture.height, TextureFormat.RGB24, false);
+				tempTexture2D.ReadPixels(new Rect(0, 0, camera.targetTexture.width, camera.targetTexture.height), 0, 0);
 				tempTexture2D.Apply();
 				
 				// Encode texture into PNG
-				byte[] bytes = tempTexture2D.EncodeToPNG();
+				byte[] bytes = tempTexture2D.EncodeToJPG();
+
+				var resultNumber = frameNumber.ToString().PadLeft(4, '0');
 
 				// save in memory
-				string filename = frameNumber + ".png";
-				var path = "UnityHeadlessRenderingScreenshots" + "/" + filename;
+				string filename = resultNumber + ".jpg";
+				var path = persistentDataPath + "/" + filename;
 				File.WriteAllBytes(path, bytes);
+
+				Debug.Log ("Frame " + frameNumber);
 
 				saving = false;
 			}
 			else if (frameNumber > maxFrames) {
+				// sync IndexedDB (browser)
+				#if UNITY_WEBGL
+					// Flush database in the web build
+					Application.ExternalEval("_JS_FileSystem_Sync();");
+					// Handle database
+					Application.ExternalEval("handleDatabase();");
+				#endif
+
+				Debug.Log ("SCREENRECORDER FINISHED");
+
 				break;
 			}
-			
 		}
 	}
 
+	// Multithread example (tested in standalone builds)
 	public IEnumerator TakeScreenShot(Camera camera)
 	{
+		Debug.Log ("Screenshot recording Multi-thread -- STARTED");
 		WaitForEndOfFrame waitForFrame = new WaitForEndOfFrame();
 
 		while (true)

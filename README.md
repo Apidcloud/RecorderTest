@@ -6,9 +6,14 @@ In this test repository, everything is done locally, but the textures/images cou
 
 ## Setup
 ### Build
-The first step is to build the project to the desired standalone target. You can either do it manually through the Editor (**File > Build Settings > Build**), or through cli, as described in the subsections below.
+The first step is to build the project to the desired target. You can either do it manually through the Editor (**File > Build Settings > Build**), or through cli, as described in the subsections below.
 
-In case you opt for the cli, the resulting file will inside, an automatically created, `Build` folder. **Don't forget to `cd` to the project folder first.**
+To make it easier to access, in **standalone** scenarios, in case you opt for the cli, the resulting file will be saved to an automatically created `Build` folder. **Don't forget to `cd` to the project folder first.**
+
+In the **WebGl** build, however, the textures are saved into the persistent path, which is an **IndexedDB**.
+
+#### WebGL
+`<unity-executable-or-app-path> -quit -batchmode -projectPath ./ -executeMethod BuildHelper.BuildWeb -logFile buildLog.txt`
 
 #### Windows x64
 `"C:\Program Files\Unity\Editor\Unity.exe” -quit -batchmode -projectPath ./ -executeMethod BuildHelper.BuildWin64 -logFile buildLog.txt`
@@ -22,7 +27,7 @@ In case you opt for the cli, the resulting file will inside, an automatically cr
 #### Linux
 Run the build resulting file as above, while setting `-executeMethod` to `BuildHelper.BuildLinux` or `BuildHelper.BuildLinux64` or `BuildHelper.BuildLinuxUniversal`
 
-### Run Build in Batch Mode
+### Run Build in Batch Mode (Standalone)
 
 The project is prepared to run in batch mode through a coroutine that will save the first 30 frames to .bmp files to **Build/ScreenRecorder**.
 
@@ -31,6 +36,13 @@ The project is prepared to run in batch mode through a coroutine that will save 
 
 #### Mac
 `sudo ./Build/AutomaticRecording.app/Contents/MacOS/AutomaticRecording -batchMode -logFile batchLog.txt`
+
+### Run WebGl build
+
+To run the build in the browser, you should do it through a server. For instance:
+`python -m SimpleHTTPServer 8080`
+
+This build
 
 ### Video Rendering
 
