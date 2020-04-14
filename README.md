@@ -40,7 +40,7 @@ The project is prepared to run in batch mode through a coroutine that will save 
 ### Run WebGl build
 
 #### Extra setup
-Before anything else, _if you rebuilt the WebGl build_, some extra code must be added to the `index.html` file within `WebGlBuildTest` folder.
+Before anything else, _if you rebuilt the WebGl build_, some extra code must be added to the `index.html` file within `WebGl/Build` folder.
 
 At the end of html tag `head`, add a reference to a new script:
 
@@ -59,6 +59,8 @@ This script will run after 30 frames are stored into the IndexedDB, and will cha
 To actually run the build in the browser, you should do it through a local server, be it through Apache or python. For instance:
 
 `python -m SimpleHTTPServer 8080`
+
+And open `http://localhost:8080/WebGl/Build/`
 
 ### Video Rendering
 

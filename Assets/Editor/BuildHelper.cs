@@ -43,7 +43,7 @@ public class BuildHelper
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
         buildPlayerOptions.scenes = new[] { "Assets/Scenes/SampleScene.unity" };
 
-        buildPlayerOptions.locationPathName = target != BuildTarget.WebGL ? "Build/AutomaticRecording" : "WebGlBuildTest";
+        buildPlayerOptions.locationPathName = target != BuildTarget.WebGL ? "Build/AutomaticRecording" : "WebGl/Build";
         buildPlayerOptions.target = target;
         buildPlayerOptions.options = BuildOptions.None;
 
