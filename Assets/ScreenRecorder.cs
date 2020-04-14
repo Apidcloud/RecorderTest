@@ -206,7 +206,7 @@ public class ScreenRecorder : MonoBehaviour
 						TextureFormat.RGB24, false);
 					tempTexture2D.ReadPixels(new Rect(0, 0, camera.targetTexture.width, camera.targetTexture.height), 0, 0);
 					tempTexture2D.Apply();
-					// we could send the texture here to a server, which then renders all images to a video (e.g., mp4)
+					// SERVER: we could send the texture here to a server, which then renders all images to a video (e.g., mp4)
 					RenderTexture.active = null;
 				}
 				// Add the required number of copies to the queue
@@ -304,8 +304,10 @@ public class ScreenRecorder : MonoBehaviour
 		{
 			if(frameQueue.Count > 0)
 			{
+				var resultNumber = savingFrameNumber.ToString().PadLeft(4, '0');
+
 				// Generate file path
-				string path = persistentDataPath + "/frame" + savingFrameNumber + ".bmp";
+				string path = persistentDataPath + "/frame" + resultNumber + ".bmp";
 
 				// Dequeue the frame, encode it as a bitmap, and write it to the file
 				using(FileStream fileStream = new FileStream(path, FileMode.Create))
