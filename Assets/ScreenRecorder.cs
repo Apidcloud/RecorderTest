@@ -92,6 +92,7 @@ public class ScreenRecorder : MonoBehaviour
 		Debug.Log ("ScreenRecorder.Start called");
 		
 		#if UNITY_WEBGL
+			Application.runInBackground = true;
 			persistentDataPath = Application.persistentDataPath;
 		#else
 			// Set target frame rate (optional)

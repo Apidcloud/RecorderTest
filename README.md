@@ -39,13 +39,31 @@ The project is prepared to run in batch mode through a coroutine that will save 
 
 ### Run WebGl build
 
-To run the build in the browser, you should do it through a server. For instance:
-`python -m SimpleHTTPServer 8080`
+#### Extra setup
+Before anything else, _if you rebuilt the WebGl build_, some extra code must be added to the `index.html` file within `WebGlBuildTest` folder.
 
-This build
+At the end of html tag `head`, add a reference to a new script:
+
+`<script src="../handleDatabase.js"></script>`
+
+At the beginning of `body`, add a new html element:
+
+`<img id="testImage">`
+
+This script will run after 30 frames are stored into the IndexedDB, and will change the background (i.e., `testImage`) to the first captured image as a test, to see if everything is working.
+
+#### Run build
+
+**Note that the screen of the game will be black, because we are only concerned about running the project in headless/batch mode.**
+
+To actually run the build in the browser, you should do it through a local server, be it through Apache or python. For instance:
+
+`python -m SimpleHTTPServer 8080`
 
 ### Video Rendering
 
-After getting the images, it is possible to render them to video (e.g., `.mp4`) through something like **ffpmeg**. Don't forget to `cd` to `Build/ScreenRecorder` before running the following command:
+After getting the images, it is possible to render them to video (e.g., `.mp4`) through something like **ffpmeg**. 
+
+An example of that, for standalone builds, is to `cd` to `Build/ScreenRecorder` and finally run:
 
 `ffmpeg -r 30 -f image2 -s 1920x1080 -i frame%04d.bmp -vcodec libx264 -crf 25  -pix_fmt yuv420p video.mp4`

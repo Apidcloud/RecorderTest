@@ -24,6 +24,6 @@ public class rotate : MonoBehaviour
 
     void Update()
     {
-        this.transform.Rotate(10, 0, 10, Space.Self);
+        this.transform.Rotate(30 * Time.deltaTime, 0, 30 * Time.deltaTime, Space.Self);
     }
 }
