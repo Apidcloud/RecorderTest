@@ -110,8 +110,8 @@ public class ScreenRecorder : MonoBehaviour
 		#endif
 
 		// Prepare textures and initial values
-		screenWidth = 1920;
-		screenHeight = 1080;
+		screenWidth = 400;
+		screenHeight = 400;
 		
 		tempRenderTexture = new RenderTexture(screenWidth, screenHeight, 0);
 		tempTexture2D = new Texture2D(screenWidth, screenHeight, TextureFormat.RGB24, false);
@@ -176,13 +176,22 @@ public class ScreenRecorder : MonoBehaviour
 
 				RenderTexture.active = camera.targetTexture;
 				camera.Render();
-					
+
+				//Debug.Log("CAMERA TARGET TEXTURE WIDTH: " + camera.targetTexture.width);
+				//Debug.Log("CAMERA TARGET TEXTURE HEIGHT: " + camera.targetTexture.height);
+
 				tempTexture2D = new Texture2D(camera.targetTexture.width, camera.targetTexture.height, TextureFormat.RGB24, false);
 				tempTexture2D.ReadPixels(new Rect(0, 0, camera.targetTexture.width, camera.targetTexture.height), 0, 0);
 				tempTexture2D.Apply();
 				
-				// Encode texture into PNG
+				Color[] pix = tempTexture2D.GetPixels(100, 100, 1, 1);
+
+				Debug.Log(pix[0].ToString());
+
+				// Encode texture into JPG
 				byte[] bytes = tempTexture2D.EncodeToJPG();
+
+				Debug.Log("IMG " + frameNumber + " byte count: " + bytes.Length);
 
 				var resultNumber = frameNumber.ToString().PadLeft(4, '0');
 
