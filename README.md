@@ -10,7 +10,7 @@ The first step is to build the project to the desired target. You can either do 
 
 To make it easier to access, in **standalone** scenarios, in case you opt for the cli, the resulting file will be saved to an automatically created `Build` folder. **Don't forget to `cd` to the project folder first.**
 
-In the **WebGl** build, however, the textures are saved into the persistent path, which is an **IndexedDB**.
+The **WebGl** build, in case you opt for the cli, will output it to `WebGl/Build`, and the textures will be saved into the persistent path, which is an **IndexedDB**.
 
 #### Windows x64
 `"C:\Program Files\Unity\Editor\Unity.exe” -quit -batchmode -projectPath ./ -executeMethod BuildHelper.BuildWin64 -logFile buildLog.txt`
