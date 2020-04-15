@@ -63,7 +63,8 @@ To actually run the WebGL build in the browser, you will need a server. For inst
 And open `http://localhost:8080/<path-to-WebGl/Build/>`
 
 You should see something like below:
-<img src="WebGl/expectedWebGLResult.png" alt="expected result" width="400"/>
+
+<img src="WebGl/expectedWebGLResult.png" alt="expected webgl result" width="400"/>
 
 **Note that the screen of the game will be black, because we are only concerned about running the project in headless/batch mode.**
 
