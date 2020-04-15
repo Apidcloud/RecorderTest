@@ -2,7 +2,9 @@
 
 Headless mode is made possible for standalone build (i.e., windows, Mac, and Linux), through batch mode (`-batchMode`).
 
-In this test repository, everything is done locally, but the textures/images could be sent to a server that is responsible for rendering them into video instead. Search for `SERVER` within `ScreenRecorder.cs` for that.
+The web environment build (i.e., WebGL), though not really headless for now, is automated through `puppeteer`. Ideally, it will also be possible to make it work headlessly, but **there is still one last issue due to unity's rendering, as explained further below**.
+
+In this test repository, everything is done locally, but the textures/images could be sent to a server that is responsible for rendering them into video instead. Search for `SERVER` within `Assets/ScreenRecorder.cs` for that.
 
 ## Setup
 ### Build
