@@ -11,7 +11,8 @@ const puppeteer = require('puppeteer');
     
     page.on('console', msg => console.log('PAGE LOG:', msg.text()));
 
-    await page.goto('http://localhost:8080/WebGl/Build/');
+    //await page.setCacheEnabled(false);
+    await page.goto('http://localhost:8080/Build/');
 
     await page.screenshot({path: 'example2.png'});
     await page.waitForSelector("#imageready");

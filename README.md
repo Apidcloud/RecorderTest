@@ -13,29 +13,29 @@ To make it easier to access, in **standalone** scenarios, in case you opt for th
 The **WebGl** build, in case you opt for the cli, will output it to `WebGl/Build`, and the textures will be saved into the persistent path, which is an **IndexedDB**.
 
 #### Windows x64
-`"C:\Program Files\Unity\Editor\Unity.exe” -quit -batchmode -projectPath ./ -executeMethod BuildHelper.BuildWin64 -logFile buildLog.txt`
+`$ "C:\Program Files\Unity\Editor\Unity.exe” -quit -batchmode -projectPath ./ -executeMethod BuildHelper.BuildWin64 -logFile buildLog.txt`
 
 #### Windows x86
-`"C:\Program Files\Unity\Editor\Unity.exe” -quit -batchmode -projectPath ./ -executeMethod BuildHelper.BuildWin -logFile buildLog.txt`
+`$ "C:\Program Files\Unity\Editor\Unity.exe” -quit -batchmode -projectPath ./ -executeMethod BuildHelper.BuildWin -logFile buildLog.txt`
 
 #### MacOS
-`/Applications/Unity/Hub/Editor/2018.4.10f1/Unity.app/Contents/MacOS/Unity -quit -batchmode -projectPath ./ -executeMethod BuildHelper.BuildMac -logFile buildLog.txt`
+`$ /Applications/Unity/Hub/Editor/2018.4.10f1/Unity.app/Contents/MacOS/Unity -quit -batchmode -projectPath ./ -executeMethod BuildHelper.BuildMac -logFile buildLog.txt`
 
 #### Linux
 Run the build resulting file as above, while setting `-executeMethod` to `BuildHelper.BuildLinux` or `BuildHelper.BuildLinux64` or `BuildHelper.BuildLinuxUniversal`
 
 #### WebGL
-`<unity-executable-or-app-path> -quit -batchmode -projectPath ./ -executeMethod BuildHelper.BuildWeb -logFile buildLog.txt`
+`$ <unity-executable-or-app-path> -quit -batchmode -projectPath ./ -executeMethod BuildHelper.BuildWeb -logFile buildLog.txt`
 
 ### Run Build in Batch Mode (Standalone)
 
 The project is prepared to run in batch mode through a coroutine that will save the first 30 frames to .bmp files to **Build/ScreenRecorder**.
 
 #### Windows
-`./Build/AutomaticRecording.exe -batchMode -logFile batchLog.txt`
+`$ ./Build/AutomaticRecording.exe -batchMode -logFile batchLog.txt`
 
 #### Mac
-`sudo ./Build/AutomaticRecording.app/Contents/MacOS/AutomaticRecording -batchMode -logFile batchLog.txt`
+`$ sudo ./Build/AutomaticRecording.app/Contents/MacOS/AutomaticRecording -batchMode -logFile batchLog.txt`
 
 ### Run WebGl build
 
@@ -56,15 +56,31 @@ This script will run after 30 frames are stored into the IndexedDB, and will cha
 
 **Note that the screen of the game will be black, because we are only concerned about running the project in headless/batch mode.**
 
-To actually run the build in the browser, you should do it through a local server, be it through Apache or python. For instance:
+To actually run the WebGL build in the browser, you will need a server. For instance:
 
-`python -m SimpleHTTPServer 8080`
+`$ python -m SimpleHTTPServer 8080`
 
-And open `http://localhost:8080/WebGl/Build/`
+And open `http://localhost:8080/<path-to-WebGl/Build/>`
+
+#### Run with Puppeteer
+
+The idea of using something like Puppeteer is to run the browser automatically and in headless mode, while still executing the build and recording the images.
+
+**There is an issue when running the browser in headless mode, however**. For now _it only works_ while `headless: false` (`WebGl/main.js`). You can try this by navigating to `WebGl` and running `yarn` to install the repository's dependencies. Make sure to have both `yarn` and `node js` installed first.
+
+After installing the dependencies (`node_modules`), if you still need a local server, run:
+
+`$ yarn server`
+
+To run the build automatically through puppeteer:
+
+`$ yarn start`
+
+The example is taking 2 screenshots after running for a few seconds (`example.png` and `example2.png`). If you run it in headless mode (`headless: true`), you will see that `example.png` is showing a black picture. The problem has to do with unity not rendering the textures properly when in headless mode.
 
 ### Video Rendering
 
-After getting the images, it is possible to render them to video (e.g., `.mp4`) through something like **ffpmeg**. 
+After getting the images (either locally or remotely), it is possible to render them to video (e.g., `.mp4`) through something like **ffpmeg**. 
 
 An example of that, for standalone builds, is to `cd` to `Build/ScreenRecorder` and finally run:
 

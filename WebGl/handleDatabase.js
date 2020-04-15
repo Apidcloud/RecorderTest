@@ -87,6 +87,7 @@ function handleDatabase()
                 //console.log(imageSrc);
                 image.src = imageSrc;
                 
+                /*
                 // just a test to check if the html and css is changed properly
                 var div = document.querySelector("#anotherTest");
                 div.style.width = "100px";
@@ -94,6 +95,7 @@ function handleDatabase()
                 div.style.background = "red";
                 div.style.color = "white";
                 div.innerHTML = "Hello";
+                */
 
                 // puppeteer related, in order to take another screenshot
                 var eventImage = document.createElement("div");
