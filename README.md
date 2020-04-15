@@ -56,13 +56,16 @@ This script will run after 30 frames are stored into the IndexedDB, and will cha
 
 #### Run build
 
-**Note that the screen of the game will be black, because we are only concerned about running the project in headless/batch mode.**
-
 To actually run the WebGL build in the browser, you will need a server. For instance:
 
 `$ python -m SimpleHTTPServer 8080`
 
 And open `http://localhost:8080/<path-to-WebGl/Build/>`
+
+You should see something like below:
+<img src="WebGl/expectedWebGLResult.png" alt="expected result" width="400"/>
+
+**Note that the screen of the game will be black, because we are only concerned about running the project in headless/batch mode.**
 
 #### Run with Puppeteer
 
