@@ -115,7 +115,7 @@ public class ScreenRecorder : MonoBehaviour
 		
 		tempRenderTexture = new RenderTexture(screenWidth, screenHeight, 0);
 		tempTexture2D = new Texture2D(screenWidth, screenHeight, TextureFormat.RGB24, false);
-		RenderTexture.active = tempRenderTexture;
+		//RenderTexture.active = tempRenderTexture;
 		GetComponent<Camera>().targetTexture = tempRenderTexture;
 
 		frameNumber = 0;
@@ -174,6 +174,7 @@ public class ScreenRecorder : MonoBehaviour
 				saving = true;
 				frameNumber++;
 
+				tempRenderTexture = RenderTexture.active;
 				RenderTexture.active = camera.targetTexture;
 				camera.Render();
 
@@ -183,6 +184,8 @@ public class ScreenRecorder : MonoBehaviour
 				tempTexture2D = new Texture2D(camera.targetTexture.width, camera.targetTexture.height, TextureFormat.RGB24, false);
 				tempTexture2D.ReadPixels(new Rect(0, 0, camera.targetTexture.width, camera.targetTexture.height), 0, 0);
 				tempTexture2D.Apply();
+
+				RenderTexture.active = tempRenderTexture;
 				
 				Color[] pix = tempTexture2D.GetPixels(100, 100, 1, 1);
 
