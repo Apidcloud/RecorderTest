@@ -22,17 +22,17 @@ function handleDatabase()
         let store = db.transaction(['FILE_DATA'],'readwrite').objectStore('FILE_DATA');
 
         var request = store.openCursor();
-
         var mainKey = null;
+        var validKeyFound = false;
 
-        var count = 0;
-
-        request.onsuccess = async function(event) {
+        request.onsuccess = function(event) {
             var cursor = event.target.result;
 
-            if (cursor) {
-            
-            if (mainKey == null){
+            if (!cursor){
+                return;
+            }
+
+            if (mainKey === null){
                 mainKey = cursor.key;
                 console.log("setting main base key as: " + cursor.key);
             }
@@ -42,19 +42,19 @@ function handleDatabase()
             var reg = new RegExp('^' + searchString.replace(/[\/]/g, '\\$&') + '\\d\\d\\d\\d\\.jpg$');
             //console.log(reg);
             var testRegex = reg.test(cursor.key);
-            //console.log(testTrue);
+            //console.log(cursor.key);
+            //console.log(testRegex);
 
-            if (testRegex){
+            // if it is the first valid key, get the image and set it
+            if (testRegex === true && !validKeyFound) {
+                validKeyFound = true;
                 console.log("Found image key: " + cursor.key);
                 // just a test with the first retrieved image to check if it works
-                if (count === 0){
-                    getAndSetImage(cursor.key);
-                    count++;
-                }
+                getAndSetImage(cursor.key);
             }
-
+            
+            // move cursor
             cursor.continue();
-            }
         };
         
         getAndSetImage = (key) => {
@@ -70,6 +70,9 @@ function handleDatabase()
                 //console.log(urlCreator);
                 //var imageUrl = URL.createObjectURL(blob);
                 //console.log(imageUrl);
+
+                // manual version, but less performant. 
+                // Just to make sure it's nothing related with window object
                 var binary = "";
                 console.log(record.contents.length);
                 for (var i = 0; i < record.contents.length; i++){
@@ -84,8 +87,7 @@ function handleDatabase()
                 //console.log(imageSrc);
                 image.src = imageSrc;
                 
-                // puppeteer related
-            
+                // just a test to check if the html and css is changed properly
                 var div = document.querySelector("#anotherTest");
                 div.style.width = "100px";
                 div.style.height = "100px";
@@ -93,6 +95,7 @@ function handleDatabase()
                 div.style.color = "white";
                 div.innerHTML = "Hello";
 
+                // puppeteer related, in order to take another screenshot
                 var eventImage = document.createElement("div");
                 eventImage.setAttribute("id", "imageready");
                 document.body.appendChild(eventImage);
