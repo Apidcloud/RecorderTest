@@ -3,18 +3,18 @@ const puppeteer = require('puppeteer');
 (async () => {
     const browser = await puppeteer.launch({headless: false,
         args:[
-            '--headless',
+            //'--headless',
             '--hide-scrollbars',
             '--mute-audio',
             '--no-sandbox',
-            '--use-gl=swiftshader'
+            //'--use-gl=swiftshader'
          ]});
     const page = await browser.newPage();
 
     /*
     await page
         .goto('chrome://gpu', { waitUntil: 'networkidle0', timeout: 20 * 60 * 1000 })
-        .catch(e => console.log(e));
+        .catch(e => console.log(e)); 
     await page.screenshot({
         path: 'gpu_stats_swift.png'
     });
