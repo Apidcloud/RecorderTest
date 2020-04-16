@@ -74,15 +74,15 @@ You should see something like below:
 
 The idea of using something like Puppeteer is to run the browser automatically and in headless mode, while still executing the build and recording the images.
 
-You can try this by navigating to `WebGl` and running `yarn` to install the repository's dependencies. Make sure to have both `yarn` and `node js` installed first.
+##### Basic Setup
 
-After installing the dependencies (`node_modules`), if you still need a local server, run:
+1. Install [NodeJS](https://nodejs.org/en/) (10.x or higher)
+2. Install Yarn globally with `$ npm i -g yarn` or download it at their [website](https://yarnpkg.com/en/docs/install)
+3. `$ cd WebGl && yarn` to install the dependencies.
+4. `$ yarn server` to run a local server
+5. `$ yarn start` to run the WebGL build through puppeteer
 
-`$ yarn server`
-
-To run the build automatically through puppeteer:
-
-`$ yarn start`
+##### Expected results
 
 The example is taking 2 screenshots after running for a few seconds (`WebGl/ScreenshotResults`). `renderingResult.png` should be the same as `expectedWebGLResult.png`.
 
