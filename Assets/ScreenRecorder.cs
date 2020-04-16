@@ -60,6 +60,7 @@ class BitmapEncoder
 /// </description>
 /// 
 [RequireComponent(typeof(Camera))]
+[RequireComponent(typeof(AudioRecorder))]
 public class ScreenRecorder : MonoBehaviour 
 {
 	// Public Properties
@@ -86,6 +87,8 @@ public class ScreenRecorder : MonoBehaviour
 	private int screenHeight;
 	private bool threadIsProcessing;
 	private bool terminateThreadWhenDone;
+
+	private AudioRecorder audioRecorder;
 
 	void Start () 
 	{
@@ -118,6 +121,8 @@ public class ScreenRecorder : MonoBehaviour
 		//RenderTexture.active = tempRenderTexture;
 		GetComponent<Camera>().targetTexture = tempRenderTexture;
 
+		audioRecorder = GetComponent<AudioRecorder>();
+
 		frameNumber = 0;
 		savingFrameNumber = 0;
 
@@ -137,14 +142,24 @@ public class ScreenRecorder : MonoBehaviour
 			threadIsProcessing = true;
 			encoderThread = new Thread (EncodeAndSave);
 			encoderThread.Start ();
+			audioRecorder.StartWriting(persistentDataPath + "/audio_output.wav");
 			StartCoroutine(TakeScreenShot(GetComponent<Camera>()));
 		#else
+			audioRecorder.StartWriting(persistentDataPath + "/audio_output.wav");
 			StartCoroutine(TakeScreenShotSimple(GetComponent<Camera>()));
 		#endif
 	}
-	
+
+	void OnApplicationQuit()
+    {
+		// make sure to stop writing audio
+		audioRecorder.StopWriting();
+	}
+
 	void OnDisable() 
 	{
+		// make sure to stop writing audio
+		audioRecorder.StopWriting();
 		// Reset target frame rate
 		Application.targetFrameRate = -1;
 
@@ -265,6 +280,11 @@ public class ScreenRecorder : MonoBehaviour
 					{
 						Debug.Log ("Frame " + frameNumber);
 					}
+				}
+
+				// don't wait for next frame to stop recording audio
+				if (frameNumber >= maxFrames){
+					audioRecorder.StopWriting();
 				}
 				
 				lastFrameTime = thisFrameTime;

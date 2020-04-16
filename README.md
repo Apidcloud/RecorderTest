@@ -1,10 +1,10 @@
-# Headless Unity Screen Recording
+# Headless Unity Screen and Audio Recording
 
 Headless mode is made possible for standalone build (i.e., windows, Mac, and Linux), through batch mode (`-batchMode`).
 
 The web environment build (i.e., WebGL), though not really headless for now, is automated through `puppeteer`. Ideally, it will also be possible to make it work headlessly, but **there is still one last issue due to unity's rendering, as explained further below**.
 
-In this test repository, everything is done locally, but the textures/images could be sent to a server that is responsible for rendering them into video instead. Search for `SERVER` within `Assets/ScreenRecorder.cs` for that.
+In this test repository, everything is done locally, but the textures/images and audio could be sent to a server that is responsible for rendering them into video instead. Search for `SERVER` within `Assets/ScreenRecorder.cs` for that.
 
 ## Setup
 ### Build
@@ -88,10 +88,12 @@ The example is taking 2 screenshots after running for a few seconds (`WebGl/Scre
 
 It is also possible to run the WebGL build in **no-gpu** scenarios (e.g., a server). To do so, just uncomment `--disable-gpu` within `WebGl/main.js`.
 
-### Video Rendering
+### Video (with audio) Rendering
 
-After getting the images (either locally or remotely), it is possible to render them to video (e.g., `.mp4`) through something like **ffpmeg**. 
+After getting the images and audio (either locally or remotely), it is possible to render them to video (e.g., `.mp4`) through something like **ffpmeg**.
 
 An example of that, for standalone builds, is to `cd` to `Build/ScreenRecorder` and finally run:
 
-`ffmpeg -r 30 -f image2 -s 1920x1080 -i frame%04d.bmp -vcodec libx264 -crf 25  -pix_fmt yuv420p video.mp4`
+`ffmpeg -r 30 -f image2 -s 1920x1080 -i frame%04d.bmp  -i audio_output.wav -shortest -vcodec libx264 -crf 25  -pix_fmt yuv420p _video.mp4`
+
+By default, the name of the (presumably longer) audio file will be `audio_output.wav`. The video is cutoff when the images/frames end through the flag `-shortest` to make sure the audio matches correctly.
