@@ -3,11 +3,12 @@ const puppeteer = require('puppeteer');
 (async () => {
     const browser = await puppeteer.launch({headless: false,
         args:[
-            //'--headless',
+            '--headless',
             '--hide-scrollbars',
             '--mute-audio',
             '--no-sandbox',
-            //'--use-gl=swiftshader'
+            '--use-gl=swiftshader',
+            //'--disable-gpu'
          ]});
     const page = await browser.newPage();
 
@@ -16,14 +17,9 @@ const puppeteer = require('puppeteer');
         .goto('chrome://gpu', { waitUntil: 'networkidle0', timeout: 20 * 60 * 1000 })
         .catch(e => console.log(e)); 
     await page.screenshot({
-        path: 'gpu_stats_swift.png'
+        path: 'GPU_STATS/gpu_stats_swiftshader_headless_swiftshader_no_gpu.png'
     });
     await browser.close();*/
-
-    // Create raw protocol session.
-    //const session = await page.target().createCDPSession();
-    //const {windowId} = await session.send('Browser.getWindowForTarget');
-    //await session.send('Browser.setWindowBounds', {windowId, bounds: {windowState: 'minimized'}});
 
     await page.setViewport({
         width: 1920,
@@ -49,11 +45,10 @@ const puppeteer = require('puppeteer');
 
     //await page.setCacheEnabled(false);
     await page.goto('http://localhost:8080/Build/');
-
-    await page.screenshot({path: 'example2.png'});
-    //await session.send('Browser.setWindowBounds', {windowId, bounds: {windowState: 'minimized'}});
+    await page.screenshot({path: 'screenshot_results/beforeLoading.png'});
     await page.waitForSelector("#imageready");
-    await page.screenshot({path: 'example.png'});
-    //await session.send('Browser.setWindowBounds', {windowId, bounds: {windowState: 'minimized'}});
+    await page.screenshot({path: 'screenshot_results/renderingResult.png'});
+
+    // doesn't seem to kill the process properly in headless mode
     await browser.close();
 })();

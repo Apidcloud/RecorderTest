@@ -14,6 +14,8 @@ To make it easier to access, in **standalone** scenarios, in case you opt for th
 
 The **WebGl** build, in case you opt for the cli, will output it to `WebGl/Build`, and the textures will be saved into the persistent path, which is an **IndexedDB**.
 
+Before building the project to WebGL, however, you should **disable** the `anti-aliasing` in unity's **quality settings**. If it is enabled, it will throw some OpenGL errors and the rendering will not work causing the output image to be black.
+
 #### Windows x64
 `$ "C:\Program Files\Unity\Editor\Unity.exe” -quit -batchmode -projectPath ./ -executeMethod BuildHelper.BuildWin64 -logFile buildLog.txt`
 
@@ -64,15 +66,15 @@ And open `http://localhost:8080/<path-to-WebGl/Build/>`
 
 You should see something like below:
 
-<img src="WebGl/expectedWebGLResult.png" alt="expected webgl result" width="400"/>
+<img src="WebGl/screenshot_results/expectedWebGLResult.png" alt="expected webgl result" width="400"/>
 
-**Note that the screen of the game will be black, because we are only concerned about running the project in headless/batch mode.**
+**Note that the screen of the game window will be black, because we are only concerned about running the project in headless/batch mode.**
 
 #### Run with Puppeteer
 
 The idea of using something like Puppeteer is to run the browser automatically and in headless mode, while still executing the build and recording the images.
 
-**There is an issue when running the browser in headless mode, however**. For now _it only works_ while `headless: false` (`WebGl/main.js`). You can try this by navigating to `WebGl` and running `yarn` to install the repository's dependencies. Make sure to have both `yarn` and `node js` installed first.
+You can try this by navigating to `WebGl` and running `yarn` to install the repository's dependencies. Make sure to have both `yarn` and `node js` installed first.
 
 After installing the dependencies (`node_modules`), if you still need a local server, run:
 
@@ -82,7 +84,9 @@ To run the build automatically through puppeteer:
 
 `$ yarn start`
 
-The example is taking 2 screenshots after running for a few seconds (`example.png` and `example2.png`). If you run it in headless mode (`headless: true`), you will see that `example.png` is showing a black picture. The problem has to do with unity not rendering the textures properly when in headless mode.
+The example is taking 2 screenshots after running for a few seconds (`WebGl/screenshot_results`). `renderingResult.png` should be the same as `expectedWebGLResult.png`.
+
+It is also possible to run the WebGL build in **no-gpu** scenarios (e.g., a server). To do so, just uncomment `--disable-gpu` within `WebGl/main.js`.
 
 ### Video Rendering
 
