@@ -94,6 +94,6 @@ After getting the images and audio (either locally or remotely), it is possible 
 
 An example of that, for standalone builds, is to `cd` to `Build/ScreenRecorder` and finally run:
 
-`ffmpeg -r 30 -f image2 -s 1920x1080 -i frame%04d.bmp  -i audio_output.wav -shortest -vcodec libx264 -crf 25  -pix_fmt yuv420p _video.mp4`
+`$ ffmpeg -r 30 -f image2 -s 1920x1080 -i frame%04d.bmp  -i audio_output.wav -shortest -vcodec libx264 -crf 25  -pix_fmt yuv420p _video.mp4`
 
 By default, the name of the (presumably longer) audio file will be `audio_output.wav`. The video is cutoff when the images/frames end through the flag `-shortest` to make sure the audio matches correctly.
