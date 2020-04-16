@@ -17,7 +17,7 @@ const puppeteer = require('puppeteer');
         .goto('chrome://gpu', { waitUntil: 'networkidle0', timeout: 20 * 60 * 1000 })
         .catch(e => console.log(e)); 
     await page.screenshot({
-        path: 'GPU_STATS/gpu_stats_swiftshader_headless_swiftshader_no_gpu.png'
+        path: 'GPU_stats/gpu_stats_swiftshader_headless_swiftshader_no_gpu.png'
     });
     await browser.close();*/
 
@@ -45,9 +45,9 @@ const puppeteer = require('puppeteer');
 
     //await page.setCacheEnabled(false);
     await page.goto('http://localhost:8080/Build/');
-    await page.screenshot({path: 'screenshot_results/beforeLoading.png'});
+    await page.screenshot({path: 'ScreenshotResults/beforeLoading.png'});
     await page.waitForSelector("#imageready");
-    await page.screenshot({path: 'screenshot_results/renderingResult.png'});
+    await page.screenshot({path: 'ScreenshotResults/renderingResult.png'});
 
     // doesn't seem to kill the process properly in headless mode
     await browser.close();

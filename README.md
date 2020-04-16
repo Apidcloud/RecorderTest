@@ -84,7 +84,7 @@ To run the build automatically through puppeteer:
 
 `$ yarn start`
 
-The example is taking 2 screenshots after running for a few seconds (`WebGl/screenshot_results`). `renderingResult.png` should be the same as `expectedWebGLResult.png`.
+The example is taking 2 screenshots after running for a few seconds (`WebGl/ScreenshotResults`). `renderingResult.png` should be the same as `expectedWebGLResult.png`.
 
 It is also possible to run the WebGL build in **no-gpu** scenarios (e.g., a server). To do so, just uncomment `--disable-gpu` within `WebGl/main.js`.
 
