@@ -2,9 +2,9 @@
 
 Headless mode is made possible for standalone build (i.e., windows, Mac, and Linux), through batch mode (`-batchMode`).
 
-The web environment build (i.e., WebGL), though not really headless for now, is automated through `puppeteer`. Ideally, it will also be possible to make it work headlessly, but **there is still one last issue due to unity's rendering, as explained further below**.
+The web environment build (i.e., WebGL) is automated through `puppeteer`. Ideally, it will also be possible to make it work with audio, but **there is limited support for WebGL, as explained further below**.
 
-In this test repository, everything is done locally, but the textures/images and audio could be sent to a server that is responsible for rendering them into video instead. Search for `SERVER` within `Assets/ScreenRecorder.cs` for that.
+In this test repository, everything is done locally, but the textures/images and audio could be sent to a server that is responsible for rendering them into video instead. Search for `SERVER` within `Assets/ScreenRecorder.cs` for that. The opposite is also valid: triggering the build in a server that replies with the rendered video.
 
 ## Setup
 ### Build
@@ -12,9 +12,9 @@ The first step is to build the project to the desired target. You can either do 
 
 To make it easier to access, in **standalone** scenarios, in case you opt for the cli, the resulting file will be saved to an automatically created `Build` folder. **Don't forget to `cd` to the project folder first.**
 
-The **WebGl** build, in case you opt for the cli, will output it to `WebGl/Build`, and the textures will be saved into the persistent path, which is an **IndexedDB**.
+The **WebGl** build, in case you opt for the cli, will output it by default to `WebGl/Build`, and the textures will be saved into the persistent path, which is an **IndexedDB**.
 
-**Before building the project to WebGL**, however, you should **disable** the `anti-aliasing` in unity's **quality settings**. If it is enabled, it will throw some OpenGL errors and the rendering will not work causing the output image to be black.
+**Before building the project to WebGL**, however, you should **disable** the `anti-aliasing` in unity's **quality settings**. If it is enabled, it will throw some OpenGL errors and the rendering will not work causing the output images to be black.
 
 #### Windows x64
 `$ "C:\Program Files\Unity\Editor\Unity.exe” -quit -batchmode -projectPath ./ -executeMethod BuildHelper.BuildWin64 -logFile buildLog.txt`
@@ -29,13 +29,17 @@ The **WebGl** build, in case you opt for the cli, will output it to `WebGl/Build
 Run the build resulting file as above, while setting `-executeMethod` to `BuildHelper.BuildLinux` or `BuildHelper.BuildLinux64` or `BuildHelper.BuildLinuxUniversal`
 
 #### WebGL
-Make sure to disable `anti-aliasing`, as described above, before running the following command:
+Make sure to **disable** `anti-aliasing`, as described above, before running the following command:
 
 `$ <unity-executable-or-app-path> -quit -batchmode -projectPath ./ -executeMethod BuildHelper.BuildWeb -logFile buildLog.txt`
 
 Alternatively, if you want to automate the extra setup described next section, you can run the following instead:
 
 `$ <unity-executable-or-app-path> -quit -batchmode -projectPath ./ -executeMethod BuildHelper.BuildWeb -logFile buildLog.txt && node WebGl/inject.js`
+
+Or simply adapt `buildAndInjectWebGL.sh` to your needs, and execute it:
+
+`$ bash ./buildAndInjectWebGL.sh`
 
 ### Run WebGl build
 
