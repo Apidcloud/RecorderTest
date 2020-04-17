@@ -76,7 +76,7 @@ The idea of using something like Puppeteer is to run the browser automatically a
 
 ##### Basic Setup
 
-1. Install [NodeJS](https://nodejs.org/en/) (10.x or higher)
+1. Install [NodeJS](https://nodejs.org/en/) (v10.18.1 or higher)
 2. Install Yarn globally with `$ npm i -g yarn` or download it at their [website](https://yarnpkg.com/en/docs/install)
 3. `$ cd WebGl && yarn` to install the dependencies.
 4. `$ yarn server` to run a local server
