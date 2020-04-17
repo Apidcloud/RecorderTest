@@ -13,14 +13,14 @@ const puppeteer = require('puppeteer');
         headless: false,
         args:[
             //'--foreground' //firefox flag
-            //'--headless',
-            //'--hide-scrollbars',
-            //'--mute-audio',
+            '--headless',
+            '--hide-scrollbars',
+            '--mute-audio',
             '--no-sandbox',
             '--use-gl=swiftshader',
             //'--disable-gpu'
          ],
-         ignoreDefaultArgs: ["--mute-audio", "--hide-scrollbars", "--headless"]
+         //ignoreDefaultArgs: ["--mute-audio", "--hide-scrollbars", "--headless"]
         });
     const page = await browser.newPage();
 

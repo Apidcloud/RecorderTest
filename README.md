@@ -84,7 +84,7 @@ The idea of using something like Puppeteer is to run the browser automatically a
 
 ##### Expected results
 
-The example is taking 2 screenshots after running for a few seconds (`WebGl/ScreenshotResults`). `renderingResult.png` should be the same as `expectedWebGLResult.png`.
+The example is taking 2 screenshots after running for a few seconds (`WebGl/ScreenshotResults`). The resulting `renderingResult.png` should be the same as `expectedWebGLResult.png`.
 
 It is also possible to run the WebGL build in **no-gpu** scenarios (e.g., a server). To do so, just uncomment `--disable-gpu` within `WebGl/main.js`.
 
