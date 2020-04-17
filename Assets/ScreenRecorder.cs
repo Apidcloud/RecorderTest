@@ -90,6 +90,8 @@ public class ScreenRecorder : MonoBehaviour
 
 	private AudioRecorder audioRecorder;
 
+	private bool threadStarted = false;
+
 	void Start () 
 	{
 		Debug.Log ("ScreenRecorder.Start called");
@@ -141,7 +143,10 @@ public class ScreenRecorder : MonoBehaviour
 			// Start a new encoder thread
 			threadIsProcessing = true;
 			encoderThread = new Thread (EncodeAndSave);
-			encoderThread.Start ();
+			encoderThread.Start();
+
+			threadStarted = true;
+			
 			audioRecorder.StartWriting(persistentDataPath + "/audio_output.wav");
 			StartCoroutine(TakeScreenShot(GetComponent<Camera>()));
 		#else
@@ -165,6 +170,24 @@ public class ScreenRecorder : MonoBehaviour
 
 		// Inform thread to terminate when finished processing frames
 		terminateThreadWhenDone = true;
+	}
+
+	void StopMainTasks(){
+		// make sure to stop writing audio
+		audioRecorder.StopWriting();
+		// Reset target frame rate
+		Application.targetFrameRate = -1;
+
+		// Inform thread to terminate when finished processing frames
+		terminateThreadWhenDone = true;
+	}
+
+	void Update(){
+		if (!threadIsProcessing && threadStarted){
+			Debug.Log("Encoding thread has finished. Closing application.");
+			threadStarted = false;
+			Application.Quit();
+		}
 	}
 
 	private bool saving = false;
@@ -300,10 +323,12 @@ public class ScreenRecorder : MonoBehaviour
 				terminateThreadWhenDone = true;
 
 				// Disable script
-				this.enabled = false;
+				//this.enabled = false;
+				StopMainTasks();
 				break;
 			}
 		}
+		
     }
 
 	// Example while running the game normally, but this method isn't called while in headless mode (batch mode)
@@ -319,7 +344,8 @@ public class ScreenRecorder : MonoBehaviour
 			if(source.width != screenWidth || source.height != screenHeight)
 			{
 				threadIsProcessing = false;
-				this.enabled = false;
+				//this.enabled = false;
+				StopMainTasks();
 				throw new UnityException("Render target size has changed!");
 			}
 
@@ -360,7 +386,8 @@ public class ScreenRecorder : MonoBehaviour
 			terminateThreadWhenDone = true;
 
 			// Disable script
-			this.enabled = false;
+			//this.enabled = false;
+			StopMainTasks();
 		}
 
 		// Passthrough
@@ -371,7 +398,7 @@ public class ScreenRecorder : MonoBehaviour
 	{
 		Debug.Log ("SCREENRECORDER IO THREAD STARTED");
 
-		while (threadIsProcessing) 
+		while (threadIsProcessing)
 		{
 			if(frameQueue.Count > 0)
 			{

@@ -102,13 +102,25 @@ The project is prepared to run in batch mode through a coroutine that will save 
 
 ### Video (with audio) Rendering
 
-After getting the images and audio (either locally or remotely), it is possible to render them to video (e.g., `.mp4`) through something like **ffpmeg**.
+After getting the images and audio (either locally or remotely), it is possible to render them to video (e.g., `.mp4`) through something like **ffpmeg**. You can do so, for standalone builds, explicitly or through a simple script.
 
-An example of that, for standalone builds, is to `cd` to `Build/ScreenRecorder` and finally run:
+#### Explicitly
+An example of that is to change to run:
 
-`$ ffmpeg -r 30 -f image2 -s 1920x1080 -i frame%04d.bmp  -i audio_output.wav -shortest -vcodec libx264 -crf 25  -pix_fmt yuv420p _video.mp4`
+`$ ffmpeg -r 30 -f image2 -s 1920x1080 -i "./Build/ScreenRecorder/frame%04d.bmp" -i "./Build/ScreenRecorder/audio_output.wav" -shortest -vcodec libx264 -crf 25 -pix_fmt yuv420p "./Build/ScreenRecorder/_video.mp4"`
 
 By default, the name of the (presumably longer) audio file will be `audio_output.wav`. The video is cutoff when the images/frames end through the flag `-shortest` to make sure the audio matches correctly.
+
+#### Script
+
+Alternatively, you can simply run `ffmpegRendering.sh`:
+
+`$ bash ffmpegRendering.sh`
+
+#### Run Build and Render video
+You can also run the build and render the video right after (_you might need admin permissions_):
+
+`$ ./Build/<executable-or-app-name> -batchMode -logFile batchLog.txt && bash ./ffmpegRendering.sh`
 
 #### Audio Recording limitation in WebGL
 Unity3D relies on multiple threads to handle audio and mixing. Unfortunately, since WebGL platform does not support threads, the Audio API is limited and doesn't support `OnAudioFilterRead`, which is used (e.g., in standalone versions) to get the audio data while it is playing in runtime. More on this [here](https://docs.unity3d.com/Manual/webgl-audio.html).
