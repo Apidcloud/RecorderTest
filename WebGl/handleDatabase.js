@@ -23,7 +23,8 @@ function handleDatabase()
 
         var request = store.openCursor();
         var mainKey = null;
-        var validKeyFound = false;
+        var validImageKeyFound = false;
+        var validAudioKeyFound = false;
 
         request.onsuccess = function(event) {
             var cursor = event.target.result;
@@ -39,22 +40,40 @@ function handleDatabase()
 
             var searchString = mainKey + "/";
 
-            var reg = new RegExp('^' + searchString.replace(/[\/]/g, '\\$&') + '\\d\\d\\d\\d\\.jpg$');
-            //console.log(reg);
-            var testRegex = reg.test(cursor.key);
+            var imageReg = new RegExp('^' + searchString.replace(/[\/]/g, '\\$&') + '\\d\\d\\d\\d\\.jpg$');
+            var audioReg = new RegExp('^' + searchString.replace(/[\/]/g, '\\$&') + '((?!\/).)*\\.wav$');
+
+            //console.log(imageReg);
+            var imageRegTest = imageReg.test(cursor.key);
+            var audioRegTest = audioReg.test(cursor.key);
             //console.log(cursor.key);
-            //console.log(testRegex);
+            //console.log(imageRegTest);
+
+            //console.log(cursor.key);
+            //console.log(audioReg);
 
             // if it is the first valid key, get the image and set it
-            if (testRegex === true && !validKeyFound) {
-                validKeyFound = true;
-                console.log("Found image key: " + cursor.key);
+            if (imageRegTest === true && !validImageKeyFound) {
+                validImageKeyFound = true;
+                //console.log("Found image key: " + cursor.key);
                 // just a test with the first retrieved image to check if it works
                 getAndSetImage(cursor.key);
+            } else if(audioRegTest === true && !validAudioKeyFound){
+                validAudioKeyFound = true;
+                console.log("Found audio key: " + cursor.key);
+                getAudio(cursor.key);
             }
-            
             // move cursor
             cursor.continue();
+        };
+
+        getAudio = (key) => {
+            let req = store.get(key);
+
+            req.onsuccess = function(e) {
+                let record = e.target.result;
+                console.log("Audio byte length: " + record.contents.length);
+            }
         };
         
         getAndSetImage = (key) => {

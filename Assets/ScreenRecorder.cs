@@ -220,6 +220,11 @@ public class ScreenRecorder : MonoBehaviour
 
 				Debug.Log ("Frame " + frameNumber);
 
+				// don't wait for next frame to stop recording audio
+				if (frameNumber >= maxFrames){
+					audioRecorder.StopWriting();
+				}
+
 				saving = false;
 			}
 			else if (frameNumber > maxFrames) {

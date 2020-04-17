@@ -1,15 +1,27 @@
 const puppeteer = require('puppeteer');
 
 (async () => {
-    const browser = await puppeteer.launch({headless: false,
+    const browser = await puppeteer.launch({
+        // to run with sound, since chromium has some problem decoding it
+        // but firefox does not support webgl headlessly
+        // to install puppeteer with firefox, remove the current with '$ yarn remove puppetteer'
+        // and run '$ PUPPETEER_PRODUCT=firefox yarn add puppeteer'
+
+        //product: 'firefox', // if installed through puppetteer
+        // another alternative, is to use your own browser by providing its path
+        // executablePath: '/path/to/Chrome',
+        headless: false,
         args:[
-            '--headless',
-            '--hide-scrollbars',
-            '--mute-audio',
+            //'--foreground' //firefox flag
+            //'--headless',
+            //'--hide-scrollbars',
+            //'--mute-audio',
             '--no-sandbox',
             '--use-gl=swiftshader',
             //'--disable-gpu'
-         ]});
+         ],
+         ignoreDefaultArgs: ["--mute-audio", "--hide-scrollbars", "--headless"]
+        });
     const page = await browser.newPage();
 
     /*

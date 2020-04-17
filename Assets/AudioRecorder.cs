@@ -12,7 +12,9 @@ public class AudioRecorder : MonoBehaviour
     private int numBuffers;
     private int outputRate = 44100;
     private const string DEFAULT_FILENAME = "audio_output.wav";
-    private int headerSize = 44; //default for uncompressed wav
+
+    //default for uncompressed wav
+    private int headerSize = 44;
     
     private bool recOutput = false;
     
@@ -38,16 +40,24 @@ public class AudioRecorder : MonoBehaviour
 
     }
 
-    public void StartWriting(string name = DEFAULT_FILENAME){
-        Debug.Log("Started writing audio: " + name);
+    private List<byte> audioByteList = new List<byte>();
 
-        fileStream = new FileStream(name, FileMode.Create);
-        byte emptyByte = new byte();
+    private string desiredFilename = "";
+
+    public void StartWriting(string name = DEFAULT_FILENAME){
+
+        desiredFilename = name;
+
+        Debug.Log("Started writing audio: " + desiredFilename);
+       
+        //fileStream = new FileStream(name, FileMode.Create);
+        //byte emptyByte = new byte();
     
         // preparing the header
         for(int i = 0; i < headerSize; i++) 
         {
-            fileStream.WriteByte(emptyByte);
+            audioByteList.Add(new byte());
+            //fileStream.WriteByte(emptyByte);
         }
 
         recOutput = true;
@@ -94,60 +104,94 @@ public class AudioRecorder : MonoBehaviour
             byteArr = BitConverter.GetBytes(intData[i]);
             byteArr.CopyTo(bytesData, i*2);
         }
+
+        audioByteList.AddRange(bytesData);
     
-        fileStream.Write(bytesData, 0, bytesData.Length);
+        //fileStream.Write(bytesData, 0, bytesData.Length);
+    }
+
+    private int seekOriginAndSetHeader(byte[] arr, int currentHeaderIndex, int byteCount){
+        for (int i = 0; i < arr.Length; i++)
+        {
+            audioByteList[currentHeaderIndex++] = arr[i];
+        }
+        return currentHeaderIndex;
     }
 
     private void WriteHeader()
     {
-        fileStream.Seek(0, SeekOrigin.Begin);
-   
+    //using (fileStream)
+    //{
+        //fileStream.Seek(0, SeekOrigin.Begin);
+
+        Debug.Log("AUDIO BYTE COUNT: " + audioByteList.Count);
+
+        int headerCurrentByteIndex = 0;
+
         byte[] riff = System.Text.Encoding.UTF8.GetBytes("RIFF");
-        fileStream.Write(riff,0,4);
-   
-        byte[] chunkSize = BitConverter.GetBytes(fileStream.Length-8);
-        fileStream.Write(chunkSize,0,4);
-   
+        //fileStream.Write(riff,0,4);
+        headerCurrentByteIndex = seekOriginAndSetHeader(riff, headerCurrentByteIndex, 4);
+
+        //fileStream.Length-8
+        byte[] chunkSize = BitConverter.GetBytes(audioByteList.Count-8);
+        //fileStream.Write(chunkSize,0,4);
+        headerCurrentByteIndex = seekOriginAndSetHeader(chunkSize, headerCurrentByteIndex, 4);
+
         byte[] wave = System.Text.Encoding.UTF8.GetBytes("WAVE");
-        fileStream.Write(wave,0,4);
-   
+        //fileStream.Write(wave,0,4);
+        headerCurrentByteIndex = seekOriginAndSetHeader(wave, headerCurrentByteIndex, 4);
+
         byte[] fmt = System.Text.Encoding.UTF8.GetBytes("fmt ");
-        fileStream.Write(fmt,0,4);
-   
+        //fileStream.Write(fmt,0,4);
+        headerCurrentByteIndex = seekOriginAndSetHeader(fmt, headerCurrentByteIndex, 4);
+
         byte[] subChunk1 = BitConverter.GetBytes(16);
-        fileStream.Write(subChunk1,0,4);
+        //fileStream.Write(subChunk1,0,4);
+        headerCurrentByteIndex = seekOriginAndSetHeader(subChunk1, headerCurrentByteIndex, 4);
     
         UInt16 two = 2;
         UInt16 one = 1;
     
         byte[] audioFormat = BitConverter.GetBytes(one);
-        fileStream.Write(audioFormat, 0, 2);
+        //fileStream.Write(audioFormat, 0, 2);
+        headerCurrentByteIndex = seekOriginAndSetHeader(audioFormat, headerCurrentByteIndex, 2);
     
         byte[] numChannels = BitConverter.GetBytes(two);
-        fileStream.Write(numChannels, 0, 2);
+        //fileStream.Write(numChannels, 0, 2);
+        headerCurrentByteIndex = seekOriginAndSetHeader(numChannels, headerCurrentByteIndex, 2);
     
         byte[] sampleRate = BitConverter.GetBytes(outputRate);
-        fileStream.Write(sampleRate, 0, 4);
+        //fileStream.Write(sampleRate, 0, 4);
+        headerCurrentByteIndex = seekOriginAndSetHeader(sampleRate, headerCurrentByteIndex, 4);
+
     
         byte[] byteRate = BitConverter.GetBytes(outputRate*4);
         // sampleRate * bytesPerSample*number of channels, here 44100*2*2
-    
-        fileStream.Write(byteRate, 0, 4);
-   
+        //fileStream.Write(byteRate, 0, 4);
+        headerCurrentByteIndex = seekOriginAndSetHeader(byteRate, headerCurrentByteIndex, 4);
+
         UInt16 four = 4;
         byte[] blockAlign = BitConverter.GetBytes(four);
-        fileStream.Write(blockAlign, 0, 2);
+        //fileStream.Write(blockAlign, 0, 2);
+        headerCurrentByteIndex = seekOriginAndSetHeader(blockAlign, headerCurrentByteIndex, 2);
     
         UInt16 sixteen = 16;
         byte[] bitsPerSample = BitConverter.GetBytes(sixteen);
-        fileStream.Write(bitsPerSample, 0, 2);
+        //fileStream.Write(bitsPerSample, 0, 2);
+        headerCurrentByteIndex = seekOriginAndSetHeader(bitsPerSample, headerCurrentByteIndex, 2);
     
         byte[] dataString = System.Text.Encoding.UTF8.GetBytes("data");
-        fileStream.Write(dataString, 0, 4);
+        //fileStream.Write(dataString, 0, 4);
+        headerCurrentByteIndex = seekOriginAndSetHeader(dataString, headerCurrentByteIndex, 4);
     
-        byte[] subChunk2 = BitConverter.GetBytes(fileStream.Length - headerSize);
-        fileStream.Write(subChunk2, 0, 4);
-    
-        fileStream.Close();
+        // fileStream.Length - headerSize
+        byte[] subChunk2 = BitConverter.GetBytes(audioByteList.Count - headerSize);
+        //fileStream.Write(subChunk2, 0, 4);
+        headerCurrentByteIndex = seekOriginAndSetHeader(subChunk2, headerCurrentByteIndex, 4);
+
+        File.WriteAllBytes(desiredFilename, audioByteList.ToArray());
+        //fileStream.Close();
+        //fileStream.Dispose();
+    //}
     }
 }

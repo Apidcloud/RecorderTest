@@ -18,6 +18,6 @@
   },
   "homepage": "https://github.com/Apidcloud/RecorderTest#readme",
   "dependencies": {
-    "puppeteer": "2.1.1"
+    "puppeteer": "3.0.0"
   }
 }

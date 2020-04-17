@@ -97,3 +97,6 @@ An example of that, for standalone builds, is to `cd` to `Build/ScreenRecorder` 
 `$ ffmpeg -r 30 -f image2 -s 1920x1080 -i frame%04d.bmp  -i audio_output.wav -shortest -vcodec libx264 -crf 25  -pix_fmt yuv420p _video.mp4`
 
 By default, the name of the (presumably longer) audio file will be `audio_output.wav`. The video is cutoff when the images/frames end through the flag `-shortest` to make sure the audio matches correctly.
+
+#### Audio Recording limitation in WebGL
+Unity3D relies on multiple threads to handle audio and mixing. Unfortunately, since WebGL platform does not support threads, the Audio API is limited and doesn't support `OnAudioFilterRead`, which is used (e.g., in standalone versions) to get the audio data while it is playing in runtime. More on this [here](https://docs.unity3d.com/Manual/webgl-audio.html).
