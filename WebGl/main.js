@@ -10,19 +10,19 @@ const puppeteer = require('puppeteer');
         //product: 'firefox', // if installed through puppetteer
         // another alternative, is to use your own browser by providing its path
         // executablePath: '/path/to/Chrome',
-        devtools: true,
+        //devtools: true,
         headless: false,
         args:[
             //'--foreground' //firefox flag
             '--headless',
-            //'--hide-scrollbars',
-            //'--mute-audio',
+            '--hide-scrollbars',
+            '--mute-audio',
             '--no-sandbox',
             '--use-gl=swiftshader',
             '--disable-features=AutoplayIgnoreWebAudio'
             //'--disable-gpu'
          ],
-         ignoreDefaultArgs: ["--mute-audio", "--hide-scrollbars", "--headless"]
+         //ignoreDefaultArgs: ["--mute-audio", "--hide-scrollbars", "--headless"]
         });
     const page = await browser.newPage();
 
@@ -64,5 +64,5 @@ const puppeteer = require('puppeteer');
     await page.screenshot({path: 'ScreenshotResults/renderingResult.png'});
 
     // doesn't seem to kill the process properly in headless mode
-    //await browser.close();
+    await browser.close();
 })();
