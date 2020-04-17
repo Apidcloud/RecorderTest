@@ -29,23 +29,25 @@ The **WebGl** build, in case you opt for the cli, will output it to `WebGl/Build
 Run the build resulting file as above, while setting `-executeMethod` to `BuildHelper.BuildLinux` or `BuildHelper.BuildLinux64` or `BuildHelper.BuildLinuxUniversal`
 
 #### WebGL
+Make sure to disable `anti-aliasing`, as described above, before running the following command:
+
 `$ <unity-executable-or-app-path> -quit -batchmode -projectPath ./ -executeMethod BuildHelper.BuildWeb -logFile buildLog.txt`
 
-### Run Build in Batch Mode (Standalone)
+Alternatively, if you want to automate the extra setup described next section, you can run the following instead:
 
-The project is prepared to run in batch mode through a coroutine that will save the first 30 frames to .bmp files to **Build/ScreenRecorder**.
-
-#### Windows
-`$ ./Build/AutomaticRecording.exe -batchMode -logFile batchLog.txt`
-
-#### Mac
-`$ sudo ./Build/AutomaticRecording.app/Contents/MacOS/AutomaticRecording -batchMode -logFile batchLog.txt`
+`$ <unity-executable-or-app-path> -quit -batchmode -projectPath ./ -executeMethod BuildHelper.BuildWeb -logFile buildLog.txt && node WebGl/inject.js`
 
 ### Run WebGl build
 
 #### Extra setup
-Before anything else, _if you rebuilt the WebGl build_, some extra code must be added to the `index.html` file within `WebGl/Build` folder.
+Before anything else, _if you rebuilt the WebGl build_, some extra code must be added to the `index.html` file within `WebGl/Build` folder, so that Unity can call a function from the client side. You can either do it manually, or by running a simple script that will do that for you.
 
+##### Inject through script
+Make sure to have `nodejs` installed and run:
+
+`$ node WebGl/inject.js`
+
+##### Manually
 At the end of html tag `head`, add a reference to a new script:
 
 `<script src="../handleDatabase.js"></script>`
@@ -87,6 +89,16 @@ The idea of using something like Puppeteer is to run the browser automatically a
 The example is taking 2 screenshots after running for a few seconds (`WebGl/ScreenshotResults`). The resulting `renderingResult.png` should be the same as `expectedWebGLResult.png`.
 
 It is also possible to run the WebGL build in **no-gpu** scenarios (e.g., a server). To do so, just uncomment `--disable-gpu` within `WebGl/main.js`.
+
+### Run Build in Batch Mode (Standalone)
+
+The project is prepared to run in batch mode through a coroutine that will save the first 30 frames to .bmp files to **Build/ScreenRecorder**.
+
+#### Windows
+`$ ./Build/AutomaticRecording.exe -batchMode -logFile batchLog.txt`
+
+#### Mac
+`$ sudo ./Build/AutomaticRecording.app/Contents/MacOS/AutomaticRecording -batchMode -logFile batchLog.txt`
 
 ### Video (with audio) Rendering
 

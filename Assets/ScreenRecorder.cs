@@ -227,7 +227,7 @@ public class ScreenRecorder : MonoBehaviour
 
 				saving = false;
 			}
-			else if (frameNumber > maxFrames) {
+			else if (frameNumber > maxFrames && !saving) {
 				// sync IndexedDB (browser)
 				#if UNITY_WEBGL
 					// Flush database in the web build

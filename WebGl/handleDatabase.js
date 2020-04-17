@@ -55,7 +55,7 @@ function handleDatabase()
             // if it is the first valid key, get the image and set it
             if (imageRegTest === true && !validImageKeyFound) {
                 validImageKeyFound = true;
-                //console.log("Found image key: " + cursor.key);
+                console.log("Found image key: " + cursor.key);
                 // just a test with the first retrieved image to check if it works
                 getAndSetImage(cursor.key);
             } else if(audioRegTest === true && !validAudioKeyFound){
@@ -72,6 +72,7 @@ function handleDatabase()
 
             req.onsuccess = function(e) {
                 let record = e.target.result;
+                console.log(record.contents);
                 console.log("Audio byte length: " + record.contents.length);
             }
         };
