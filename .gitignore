@@ -7,8 +7,6 @@ Assets/AssetStoreTools*
 
 node_modules
 
-runBuildAndRender.sh
-
 buildLog.txt
 batchLog.txt
 
